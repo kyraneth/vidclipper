@@ -6,7 +6,6 @@ from tkinter import ttk, filedialog, messagebox
 from pathlib import Path
 from pytube import YouTube
 from moviepy.video.io.VideoFileClip import VideoFileClip
-from moviepy.video.fx.MultiplySpeed import multiply_speed
 from moviepy.video.compositing.concatenate import concatenate_videoclips
 import threading
 import re
@@ -247,7 +246,7 @@ class VidClipperApp:
             vid = vid.subclip(start_time, end_time)
             
             if speed != 1.0:
-                vid = vid.fx(multiply_speed, speed)
+                vid = vid.fx(lambda clip: clip.fl_time(lambda t: t/speed))
             
             if not concatenate:
                 output_path = os.path.join(self.output_dir, f"{name}_{start_time:.2f}_{end_time:.2f}.mp4")
@@ -324,7 +323,7 @@ def cut_video(path, start_time, end_time, concatenate=False, speed=1.0, output_d
         vid = vid.subclip(start_time, end_time)
         
         if speed != 1.0:
-            vid = vid.fx(multiply_speed, speed)
+            vid = vid.fx(lambda clip: clip.fl_time(lambda t: t/speed))
         
         if not concatenate:
             output_path = os.path.join(output_dir, f"{name}_{start_time:.2f}_{end_time:.2f}.mp4")
