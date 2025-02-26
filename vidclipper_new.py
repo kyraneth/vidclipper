@@ -6,7 +6,7 @@ from tkinter import ttk, filedialog, messagebox
 from pathlib import Path
 from pytube import YouTube
 from moviepy.video.io.VideoFileClip import VideoFileClip
-from moviepy.video.compositing.concatenate import concatenate_videoclips
+from moviepy import concatenate_videoclips
 import threading
 import re
 
