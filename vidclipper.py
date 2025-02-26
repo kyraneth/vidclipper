@@ -5,8 +5,9 @@ import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 from pathlib import Path
 from pytube import YouTube
-import moviepy.editor as me
-from moviepy.editor import *
+from moviepy.video.io.VideoFileClip import VideoFileClip
+from moviepy.video.fx.all import speedx
+from moviepy.video.compositing.concatenate import concatenate_videoclips
 import threading
 import re
 
@@ -205,7 +206,7 @@ class VidClipperApp:
                 self.status_var.set("Concatenating clips...")
                 self.root.update_idletasks()
                 
-                final = me.concatenate_videoclips(processed_clips)
+                final = concatenate_videoclips(processed_clips)
                 
                 p = Path(self.downloaded_path)
                 name = p.stem
@@ -242,11 +243,11 @@ class VidClipperApp:
             p = Path(path)
             name = p.stem
             
-            vid = me.VideoFileClip(path)
+            vid = VideoFileClip(path)
             vid = vid.subclip(start_time, end_time)
             
             if speed != 1.0:
-                vid = vid.fx(vfx.speedx, speed)
+                vid = vid.fx(speedx, speed)
             
             if not concatenate:
                 output_path = os.path.join(self.output_dir, f"{name}_{start_time:.2f}_{end_time:.2f}.mp4")
@@ -319,11 +320,11 @@ def cut_video(path, start_time, end_time, concatenate=False, speed=1.0, output_d
         p = Path(path)
         name = p.stem
         
-        vid = me.VideoFileClip(path)
+        vid = VideoFileClip(path)
         vid = vid.subclip(start_time, end_time)
         
         if speed != 1.0:
-            vid = vid.fx(vfx.speedx, speed)
+            vid = vid.fx(speedx, speed)
         
         if not concatenate:
             output_path = os.path.join(output_dir, f"{name}_{start_time:.2f}_{end_time:.2f}.mp4")
@@ -407,7 +408,7 @@ def main_cli():
     
     # Concatenate if needed
     if args.conc and processed_clips:
-        final = me.concatenate_videoclips(processed_clips)
+        final = concatenate_videoclips(processed_clips)
         
         p = Path(path)
         name = p.stem
